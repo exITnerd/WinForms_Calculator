@@ -47,12 +47,12 @@
             btn_xpow2 = new Button();
             btn_1divbyX = new Button();
             btn_backspace = new Button();
-            btn_percent = new Button();
             btn_c = new Button();
             btn_ce = new Button();
             btn_minus = new Button();
             btn_plus = new Button();
             btn_equals = new Button();
+            btn_percent = new Button();
             flowLayoutPanel1 = new FlowLayoutPanel();
             lbl_display = new Label();
             tableLayoutPanel1.SuspendLayout();
@@ -88,12 +88,12 @@
             tableLayoutPanel1.Controls.Add(btn_xpow2, 1, 1);
             tableLayoutPanel1.Controls.Add(btn_1divbyX, 0, 1);
             tableLayoutPanel1.Controls.Add(btn_backspace, 3, 0);
-            tableLayoutPanel1.Controls.Add(btn_percent, 0, 0);
             tableLayoutPanel1.Controls.Add(btn_c, 2, 0);
             tableLayoutPanel1.Controls.Add(btn_ce, 1, 0);
             tableLayoutPanel1.Controls.Add(btn_minus, 3, 3);
             tableLayoutPanel1.Controls.Add(btn_plus, 3, 4);
             tableLayoutPanel1.Controls.Add(btn_equals, 3, 5);
+            tableLayoutPanel1.Controls.Add(btn_percent, 0, 0);
             tableLayoutPanel1.GrowStyle = TableLayoutPanelGrowStyle.FixedSize;
             tableLayoutPanel1.Location = new Point(3, 3);
             tableLayoutPanel1.MinimumSize = new Size(584, 600);
@@ -312,18 +312,6 @@
             btn_backspace.UseVisualStyleBackColor = false;
             btn_backspace.Click += OperationButtonClick;
             // 
-            // btn_percent
-            // 
-            btn_percent.BackColor = SystemColors.ControlLight;
-            btn_percent.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
-            btn_percent.Location = new Point(3, 3);
-            btn_percent.Name = "btn_percent";
-            btn_percent.Size = new Size(140, 91);
-            btn_percent.TabIndex = 0;
-            btn_percent.Text = "%";
-            btn_percent.UseVisualStyleBackColor = false;
-            btn_percent.Click += OperationButtonClick;
-            // 
             // btn_c
             // 
             btn_c.BackColor = SystemColors.ControlLight;
@@ -338,7 +326,7 @@
             // 
             // btn_ce
             // 
-            btn_ce.BackColor = SystemColors.ControlLight;
+            btn_ce.BackColor = SystemColors.ControlDarkDark;
             btn_ce.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
             btn_ce.Location = new Point(149, 3);
             btn_ce.Name = "btn_ce";
@@ -384,6 +372,18 @@
             btn_equals.UseVisualStyleBackColor = false;
             btn_equals.Click += OperationButtonClick;
             // 
+            // btn_percent
+            // 
+            btn_percent.BackColor = SystemColors.ControlDarkDark;
+            btn_percent.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_percent.Location = new Point(3, 3);
+            btn_percent.Name = "btn_percent";
+            btn_percent.Size = new Size(140, 91);
+            btn_percent.TabIndex = 0;
+            btn_percent.Text = "%";
+            btn_percent.UseVisualStyleBackColor = false;
+            btn_percent.Click += OperationButtonClick;
+            // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
@@ -396,6 +396,7 @@
             // 
             // lbl_display
             // 
+            lbl_display.AutoEllipsis = true;
             lbl_display.BackColor = SystemColors.AppWorkspace;
             lbl_display.Dock = DockStyle.Top;
             lbl_display.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
@@ -417,7 +418,6 @@
             FormBorderStyle = FormBorderStyle.Fixed3D;
             Name = "Form1";
             Text = "Calculator";
-            Load += Form1_Load;
             tableLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
