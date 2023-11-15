@@ -267,12 +267,12 @@
             // btn_sqrtx
             // 
             btn_sqrtx.BackColor = SystemColors.ControlLight;
-            btn_sqrtx.Font = new Font("Arial", 26.25F, FontStyle.Regular, GraphicsUnit.Point);
+            btn_sqrtx.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
             btn_sqrtx.Location = new Point(295, 103);
             btn_sqrtx.Name = "btn_sqrtx";
             btn_sqrtx.Size = new Size(140, 91);
             btn_sqrtx.TabIndex = 4;
-            btn_sqrtx.Text = "sqrt(x)";
+            btn_sqrtx.Text = "√x";
             btn_sqrtx.UseVisualStyleBackColor = false;
             btn_sqrtx.Click += OperationButtonClick;
             // 
@@ -326,7 +326,7 @@
             // 
             // btn_ce
             // 
-            btn_ce.BackColor = SystemColors.ControlDarkDark;
+            btn_ce.BackColor = SystemColors.ControlLight;
             btn_ce.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
             btn_ce.Location = new Point(149, 3);
             btn_ce.Name = "btn_ce";
@@ -362,7 +362,7 @@
             // 
             // btn_equals
             // 
-            btn_equals.BackColor = Color.FromArgb(255, 192, 192);
+            btn_equals.BackColor = Color.FromArgb(255, 255, 192);
             btn_equals.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
             btn_equals.Location = new Point(441, 503);
             btn_equals.Name = "btn_equals";
@@ -374,7 +374,7 @@
             // 
             // btn_percent
             // 
-            btn_percent.BackColor = SystemColors.ControlDarkDark;
+            btn_percent.BackColor = SystemColors.ControlLight;
             btn_percent.Font = new Font("Arial", 36F, FontStyle.Regular, GraphicsUnit.Point);
             btn_percent.Location = new Point(3, 3);
             btn_percent.Name = "btn_percent";

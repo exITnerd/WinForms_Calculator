@@ -2,10 +2,10 @@ namespace WinForms_Calculator
 {
     public partial class Form1 : Form
     {
-        private string currentInput = "0";
-        private string currentInputValue = "0";
-        private char? currentOperation;
-        private double? lastValue;
+        private string displayText = "0"; // Represents the text displayed on the calculator screen
+        private string displayTextValue = "0"; // Represents the current input value being entered
+        private char? selectedOperation; // Represents the currently selected arithmetic operation
+        private double? storedValue; // Represents the last stored numeric value
 
         public Form1()
         {
@@ -15,21 +15,7 @@ namespace WinForms_Calculator
             this.MinimizeBox = false;
         }
 
-        private void btn_backspace_Click(object sender, EventArgs e)
-        {
-            // Obs³uga przycisku backspace
-            if (lbl_display.Text.Length > 0)
-            {
-                lbl_display.Text = lbl_display.Text.Substring(0, lbl_display.Text.Length - 1);
-
-                // Je¿eli etykieta jest pusta, ustaw wartoœæ domyœln¹
-                if (string.IsNullOrEmpty(lbl_display.Text))
-                {
-                    lbl_display.Text = "0";
-                }
-            }
-        }
-
+        // "0-9" and ","
         private void NumericButtonClick(object sender, EventArgs e)
         {
             if (sender is Button button)
@@ -38,28 +24,27 @@ namespace WinForms_Calculator
 
                 if (buttonText == ",")
                 {
-                    if (!currentInputValue.Contains(","))
+                    if (!displayTextValue.Contains(","))
                     {
-                        currentInputValue += buttonText;
+                        displayTextValue += buttonText;
                     }
                 }
                 else
                 {
-                    if (currentInputValue == "0")
+                    if (displayTextValue == "0")
                     {
-                        currentInputValue = buttonText;
+                        displayTextValue = buttonText;
                     }
                     else
                     {
-                        currentInputValue += buttonText;
+                        displayTextValue += buttonText;
                     }
                 }
-
-                lbl_display.Text = currentInputValue;
+                lbl_display.Text = displayTextValue;
             }
         }
 
-
+        // All logic functions (+, -, *, /, %, CE, C, backspace, 1/x, x^2, sqrt(x), =, +-)
         private void OperationButtonClick(object sender, EventArgs e)
         {
             if (sender is Button button)
@@ -69,33 +54,88 @@ namespace WinForms_Calculator
                 switch (buttonName)
                 {
                     case "btn_percent":
-                        ApplyPercentage();
+                        if (double.TryParse(displayTextValue, out double currentValue) && storedValue.HasValue && selectedOperation.HasValue)
+                        {
+                            double percentage = storedValue.Value * (currentValue / 100);
+
+                            switch (selectedOperation)
+                            {
+                                case '+':
+                                    storedValue += percentage;
+                                    break;
+                                case '-':
+                                    storedValue -= percentage;
+                                    break;
+                                case '*':
+                                    storedValue = percentage;
+                                    break;
+                                default:
+                                    break;
+                            }
+
+                            displayTextValue = storedValue.ToString();
+                            lbl_display.Text = displayTextValue;
+                        }
                         break;
                     case "btn_ce":
-                        currentInputValue = "0";
-                        lbl_display.Text = currentInputValue;
+                        // Delete whole operation
+                        int index = displayTextValue.Length - 1;
+                        while (index >= 0 && (char.IsDigit(displayTextValue[index]) || displayTextValue[index] == '.'))
+                        {
+                            index--;
+                        }
+
+                        // delete "+" or "-" operator
+                        if (index >= 0 && (displayTextValue[index] == '+' || displayTextValue[index] == '-'))
+                        {
+                            index--;
+                        }
+
+                        if (index < 0)
+                        {
+                            displayTextValue = "0";
+                        }
+                        else
+                        {
+                            displayTextValue = displayTextValue.Substring(0, index + 1);
+                        }
+
+                        lbl_display.Text = displayTextValue;
                         break;
                     case "btn_c":
-                        currentInput = "0";
-                        currentInputValue = "0";
-                        currentOperation = null;
-                        lastValue = null;
+                        displayText = "0";
+                        displayTextValue = "0";
+                        selectedOperation = null;
+                        storedValue = null;
                         lbl_display.Text = "0";
                         break;
                     case "btn_backspace":
-                        btn_backspace_Click(sender, e);
+                        if (lbl_display.Text.Length > 0)
+                        {
+                            lbl_display.Text = lbl_display.Text.Substring(0, lbl_display.Text.Length - 1);
+
+                            if (string.IsNullOrEmpty(lbl_display.Text))
+                            {
+                                lbl_display.Text = "0";
+                                displayTextValue = "0";
+                            }
+                            else
+                            {
+                                displayTextValue = lbl_display.Text;
+                            }
+                        }
                         break;
                     case "btn_1divbyX":
-                        if (double.TryParse(lbl_display.Text, out double value))
+                        if (double.TryParse(lbl_display.Text, out double value1DivByX))
                         {
-                            double result = 1 / value;
+                            double result = 1 / value1DivByX;
                             lbl_display.Text = result.ToString();
                         }
                         break;
                     case "btn_xpow2":
-                        if (double.TryParse(lbl_display.Text, out double valueX2))
+                        if (double.TryParse(lbl_display.Text, out double valueXpow2))
                         {
-                            double resultX2 = Math.Pow(valueX2, 2);
+                            double resultX2 = Math.Pow(valueXpow2, 2);
                             lbl_display.Text = resultX2.ToString();
                         }
                         break;
@@ -103,9 +143,9 @@ namespace WinForms_Calculator
                         if (double.TryParse(lbl_display.Text, out double valueSqrt) && valueSqrt >= 0)
                         {
                             double resultSqrt = Math.Sqrt(valueSqrt);
-                            currentInput = resultSqrt.ToString();
-                            currentInputValue = currentInput;
-                            lbl_display.Text = currentInput;
+                            displayText = resultSqrt.ToString();
+                            displayTextValue = displayText;
+                            lbl_display.Text = displayText;
                         }
                         else
                         {
@@ -128,9 +168,11 @@ namespace WinForms_Calculator
                         PerformCalculation();
                         break;
                     case "btn_plus_minus":
-                        if (double.TryParse(lbl_display.Text, out double currentValue))
+                        if (double.TryParse(lbl_display.Text, out double currentValue2))
                         {
-                            lbl_display.Text = (-currentValue).ToString();
+                            currentValue2 = (-1 * currentValue2);
+                            displayTextValue = currentValue2.ToString();
+                            lbl_display.Text = displayTextValue;
                         }
                         break;
                     default:
@@ -139,53 +181,25 @@ namespace WinForms_Calculator
             }
         }
 
-        private void ApplyPercentage()
-        {
-            if (double.TryParse(currentInputValue, out double currentValue) && lastValue.HasValue && currentOperation.HasValue)
-            {
-                double percentage = lastValue.Value * (currentValue / 100);
-
-                switch (currentOperation)
-                {
-                    case '+':
-                        lastValue += percentage;
-                        break;
-                    case '-':
-                        lastValue -= percentage;
-                        break;
-                    case '*':
-                        lastValue = percentage;
-                        break;
-                    default:
-                        break;
-                }
-
-                currentInputValue = lastValue.ToString();
-                lbl_display.Text = currentInputValue;
-            }
-        }
-
         private void HandleArithmeticOperation(char operation)
         {
-            if (double.TryParse(currentInputValue, out double currentValue))
+            if (double.TryParse(displayTextValue, out double currentValue))
             {
-                if (currentOperation.HasValue && lastValue.HasValue)
+                if (selectedOperation.HasValue && storedValue.HasValue)
                 {
-                    double result = PerformArithmeticOperation(lastValue.Value, currentValue, currentOperation.Value);
-                    lastValue = result;
-                    currentInputValue = result.ToString();
-                    lbl_display.Text = currentInputValue;
+                    double result = PerformArithmeticOperation(storedValue.Value, currentValue, selectedOperation.Value);
+                    storedValue = result;
+                    displayTextValue = result.ToString();
+                    lbl_display.Text = displayTextValue;
                 }
                 else
                 {
-                    lastValue = currentValue;
+                    storedValue = currentValue;
                 }
-
-                currentOperation = operation;
-                currentInputValue = "0";
+                selectedOperation = operation;
+                displayTextValue = "0";
             }
         }
-
 
         private double PerformArithmeticOperation(double operand1, double operand2, char operation)
         {
@@ -214,14 +228,14 @@ namespace WinForms_Calculator
 
         private void PerformCalculation()
         {
-            if (currentOperation.HasValue && lastValue.HasValue)
+            if (selectedOperation.HasValue && storedValue.HasValue)
             {
-                double currentValue = double.Parse(currentInputValue);
-                double result = PerformArithmeticOperation(lastValue.Value, currentValue, currentOperation.Value);
-                currentInputValue = result.ToString();
-                lbl_display.Text = currentInputValue;
-                currentOperation = null;
-                lastValue = null;
+                double currentValue = double.Parse(displayTextValue);
+                double result = PerformArithmeticOperation(storedValue.Value, currentValue, selectedOperation.Value);
+                displayTextValue = result.ToString();
+                lbl_display.Text = displayTextValue;
+                selectedOperation = null;
+                storedValue = null;
             }
         }
     }
