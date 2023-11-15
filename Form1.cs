@@ -1,3 +1,6 @@
+using System.Data;
+using System.Windows.Forms.VisualStyles;
+
 namespace WinForms_Calculator
 {
     public partial class Form1 : Form
@@ -15,7 +18,7 @@ namespace WinForms_Calculator
             this.MinimizeBox = false;
         }
 
-        // "0-9" and ","
+        // AA numbers "0-9" and dot operation ","
         private void NumericButtonClick(object sender, EventArgs e)
         {
             if (sender is Button button)
@@ -54,103 +57,25 @@ namespace WinForms_Calculator
                 switch (buttonName)
                 {
                     case "btn_percent":
-                        if (double.TryParse(displayTextValue, out double currentValue) && storedValue.HasValue && selectedOperation.HasValue)
-                        {
-                            double percentage = storedValue.Value * (currentValue / 100);
-
-                            switch (selectedOperation)
-                            {
-                                case '+':
-                                    storedValue += percentage;
-                                    break;
-                                case '-':
-                                    storedValue -= percentage;
-                                    break;
-                                case '*':
-                                    storedValue = percentage;
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            displayTextValue = storedValue.ToString();
-                            lbl_display.Text = displayTextValue;
-                        }
+                        Percentage();
                         break;
                     case "btn_ce":
-                        // Delete whole operation
-                        int index = displayTextValue.Length - 1;
-                        while (index >= 0 && (char.IsDigit(displayTextValue[index]) || displayTextValue[index] == '.'))
-                        {
-                            index--;
-                        }
-
-                        // delete "+" or "-" operator
-                        if (index >= 0 && (displayTextValue[index] == '+' || displayTextValue[index] == '-'))
-                        {
-                            index--;
-                        }
-
-                        if (index < 0)
-                        {
-                            displayTextValue = "0";
-                        }
-                        else
-                        {
-                            displayTextValue = displayTextValue.Substring(0, index + 1);
-                        }
-
-                        lbl_display.Text = displayTextValue;
+                        ClearE();
                         break;
                     case "btn_c":
-                        displayText = "0";
-                        displayTextValue = "0";
-                        selectedOperation = null;
-                        storedValue = null;
-                        lbl_display.Text = "0";
+                        Clear();
                         break;
                     case "btn_backspace":
-                        if (lbl_display.Text.Length > 0)
-                        {
-                            lbl_display.Text = lbl_display.Text.Substring(0, lbl_display.Text.Length - 1);
-
-                            if (string.IsNullOrEmpty(lbl_display.Text))
-                            {
-                                lbl_display.Text = "0";
-                                displayTextValue = "0";
-                            }
-                            else
-                            {
-                                displayTextValue = lbl_display.Text;
-                            }
-                        }
+                        Backspace();
                         break;
                     case "btn_1divbyX":
-                        if (double.TryParse(lbl_display.Text, out double value1DivByX))
-                        {
-                            double result = 1 / value1DivByX;
-                            lbl_display.Text = result.ToString();
-                        }
+                        OneDivByX();
                         break;
                     case "btn_xpow2":
-                        if (double.TryParse(lbl_display.Text, out double valueXpow2))
-                        {
-                            double resultX2 = Math.Pow(valueXpow2, 2);
-                            lbl_display.Text = resultX2.ToString();
-                        }
+                        Pow();
                         break;
                     case "btn_sqrtx":
-                        if (double.TryParse(lbl_display.Text, out double valueSqrt) && valueSqrt >= 0)
-                        {
-                            double resultSqrt = Math.Sqrt(valueSqrt);
-                            displayText = resultSqrt.ToString();
-                            displayTextValue = displayText;
-                            lbl_display.Text = displayText;
-                        }
-                        else
-                        {
-                            MessageBox.Show("Nie mo¿na uzyskaæ pierwiastka!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
+                        SquareRoot();
                         break;
                     case "btn_divide":
                         HandleArithmeticOperation('/');
@@ -168,12 +93,7 @@ namespace WinForms_Calculator
                         PerformCalculation();
                         break;
                     case "btn_plus_minus":
-                        if (double.TryParse(lbl_display.Text, out double currentValue2))
-                        {
-                            currentValue2 = (-1 * currentValue2);
-                            displayTextValue = currentValue2.ToString();
-                            lbl_display.Text = displayTextValue;
-                        }
+                        ChangeSign();
                         break;
                     default:
                         break;
@@ -181,6 +101,135 @@ namespace WinForms_Calculator
             }
         }
 
+        private void Percentage()
+        {
+            if (double.TryParse(displayTextValue, out double currentValue) && storedValue.HasValue && selectedOperation.HasValue)
+            {
+                double percentage = storedValue.Value * (currentValue / 100);
+
+                switch (selectedOperation)
+                {
+                    case '+':
+                        storedValue += percentage;
+                        break;
+                    case '-':
+                        storedValue -= percentage;
+                        break;
+                    case '*':
+                        storedValue = percentage;
+                        break;
+                    default:
+                        break;
+                }
+
+                displayTextValue = storedValue.ToString();
+                lbl_display.Text = displayTextValue;
+            }
+        }
+        private void ClearE()
+        {
+            // Delete whole operation
+            int index = displayTextValue.Length - 1;
+            while (index >= 0 && (char.IsDigit(displayTextValue[index]) || displayTextValue[index] == '.'))
+            {
+                index--;
+            }
+
+            // delete "+" or "-" operator
+            if (index >= 0 && (displayTextValue[index] == '+' || displayTextValue[index] == '-'))
+            {
+                index--;
+            }
+
+            if (index < 0)
+            {
+                displayTextValue = "0";
+            }
+            else
+            {
+                displayTextValue = displayTextValue.Substring(0, index + 1);
+            }
+
+            lbl_display.Text = displayTextValue;
+        }
+        private void Clear()
+        {
+            displayText = "0";
+            displayTextValue = "0";
+            selectedOperation = null;
+            storedValue = null;
+            lbl_display.Text = "0";
+        }
+        private void Backspace()
+        {
+            if (lbl_display.Text.Length > 0)
+            {
+                lbl_display.Text = lbl_display.Text.Substring(0, lbl_display.Text.Length - 1);
+
+                if (string.IsNullOrEmpty(lbl_display.Text))
+                {
+                    lbl_display.Text = "0";
+                    displayTextValue = "0";
+                }
+                else
+                {
+                    displayTextValue = lbl_display.Text;
+                }
+            }
+        }
+        private void OneDivByX()
+        {
+            if (double.TryParse(lbl_display.Text, out double value1DivByX))
+            {
+                if (value1DivByX == 0)
+                {
+                    MessageBox.Show("Nie mo¿na dzieliæ przez zero!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    double result = 1 / value1DivByX;
+                    lbl_display.Text = result.ToString();
+                }
+            }
+        }
+        private void Pow()
+        {
+            if (double.TryParse(lbl_display.Text, out double valueXpow2))
+            {
+                double resultX2 = Math.Pow(valueXpow2, 2);
+                lbl_display.Text = resultX2.ToString();
+            }
+        }
+        private void SquareRoot()
+        {
+            if (double.TryParse(lbl_display.Text, out double valueSqrt) && valueSqrt >= 0)
+            {
+                double resultSqrt = Math.Sqrt(valueSqrt);
+                displayText = resultSqrt.ToString();
+                displayTextValue = displayText;
+                lbl_display.Text = displayText;
+            }
+            else
+            {
+                MessageBox.Show("Nie mo¿na uzyskaæ pierwiastka!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void ChangeSign()
+        {
+            if (double.TryParse(lbl_display.Text, out double currentValue2))
+            {
+                if (lbl_display.Text == "0")
+                {
+                    MessageBox.Show("Zero nie mo¿e byæ ani dodatnie, ani ujemne!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+                else
+                {
+                    currentValue2 = (-1 * currentValue2);
+                    displayTextValue = currentValue2.ToString();
+                    lbl_display.Text = displayTextValue;
+                }
+            }
+        }
         private void HandleArithmeticOperation(char operation)
         {
             if (double.TryParse(displayTextValue, out double currentValue))
