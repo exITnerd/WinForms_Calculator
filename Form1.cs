@@ -183,7 +183,7 @@ namespace WinForms_Calculator
             {
                 if (value1DivByX == 0)
                 {
-                    MessageBox.Show("Nie mo¿na dzieliæ przez zero!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("You can't divide by zero!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
@@ -211,7 +211,7 @@ namespace WinForms_Calculator
             }
             else
             {
-                MessageBox.Show("Nie mo¿na uzyskaæ pierwiastka!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Can't count the root!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
         private void ChangeSign()
@@ -220,7 +220,7 @@ namespace WinForms_Calculator
             {
                 if (lbl_display.Text == "0")
                 {
-                    MessageBox.Show("Zero nie mo¿e byæ ani dodatnie, ani ujemne!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Zero cannot have a sign (+/-)!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
@@ -267,11 +267,11 @@ namespace WinForms_Calculator
                     }
                     else
                     {
-                        MessageBox.Show("Nie mo¿na dzieliæ przez zero!", "B³¹d", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBox.Show("You can't divide by zero!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return operand1;
                     }
                 default:
-                    throw new InvalidOperationException("Nieobs³ugiwana operacja");
+                    throw new InvalidOperationException("Unsupported operation");
             }
         }
 
